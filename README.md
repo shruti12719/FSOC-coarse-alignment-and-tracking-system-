@@ -5,37 +5,47 @@ This web application wraps the supplied `2d final` simulator modules (`sim`, `vi
 ## How to Run the Application
 
 
-### Option 1: Run via the Standalone Executable (`.exe`)
+## Running the Application
+
+### Option 1: Run the Standalone Executable (`.exe`)
+
 1. Open PowerShell or Command Prompt.
-2. Navigate to the output directory:
-   ```powershell
+2. Go to the output folder:
+```powershell
    cd dist\FSOC_Tracker
+```
+3. Launch the executable:
+```powershell
+   .\FSOC_Tracker.exe
+```
 
+The app opens in your browser. Closing the console window stops the app. Reports and uploaded videos are saved in the `FSOC_data` folder next to the executable.
 
-Launch the executable:
-.\FSOC_Tracker.exe
+### Option 2: Rebuild and Package the Executable
 
-
-###Option 2: Rebuild & Package the Executable
-# Rebuild the UI frontend
+1. Rebuild the UI frontend:
+```powershell
    cd web
    npm install
    npm run build
    cd ..
-
-
-# Generate the standalone executable
-python -m PyInstaller fsoc_app.spec
-
-
-# Generate the standalone executable
-python -m PyInstaller fsoc_app.spec
-## Start
-
+```
+2. Generate the standalone executable:
 ```powershell
-& "C:\Users\shrut\OneDrive\Desktop\fsoc-tracker-webapp\web_app\.venv\Scripts\python.exe" -m server
+   python -m PyInstaller fsoc_app.spec
 ```
 
+The new build is created in `dist\FSOC_Tracker\`. Share the whole folder, not only the `.exe`.
+
+### Option 3: Run from Source (Development)
+
+From the project folder, with the virtual environment set up:
+
+```powershell
+.\.venv\Scripts\python.exe -m server
+```
+
+Then open http://127.0.0.1:8011 in your browser.
 
 Open `http://127.0.0.1:8011`.
 
