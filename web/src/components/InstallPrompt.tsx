@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
-// Windows desktop build, attached to the latest GitHub release.
-const EXE_URL = 'https://github.com/shruti12719/FSOC-coarse-alignment-and-tracking-system-/releases/latest/download/FSOC_Tracker.exe'
+// Windows desktop build, committed to the repo under release/.
+const EXE_URL = 'https://github.com/shruti12719/FSOC-coarse-alignment-and-tracking-system-/raw/main/release/FSOC_Tracker.exe'
 const DISMISS_KEY = 'fsoc-install-dismissed'
 export const SHOW_INSTALL_EVENT = 'fsoc:show-install'
 

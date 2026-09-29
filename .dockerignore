@@ -18,3 +18,5 @@ FSOC_data
 *.avi
 *.mov
 *.mkv
+release
+*.exe
