@@ -144,3 +144,7 @@ em.hint { font-style: normal; }
 @media (max-width: 760px) {
   .settings-grid { grid-template-columns: 1fr; }
 }
+.get-app { padding: 5px 10px; border: 1px solid #60d9b9; border-radius: 20px; color: #62dab9; background: transparent; font: 700 .58rem 'DM Mono', monospace; letter-spacing: .06em; text-transform: uppercase; }.get-app:hover { color: #061118; background: #62dab9; }
+.install-backdrop { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(2, 7, 12, .72); animation: install-fade .2s ease-out; } @keyframes install-fade { from { opacity: 0; } }
+.install-card { display: grid; justify-items: center; gap: 10px; width: min(420px, 100%); padding: 26px 24px 18px; text-align: center; background: linear-gradient(145deg, rgba(15, 34, 48, .98), rgba(5, 15, 25, .99)); }.install-card img { border-radius: 12px; }.install-card h2 { margin: 0; font-size: 1.05rem; }.install-card p { margin: 0; color: #a6bac5; font-size: .74rem; line-height: 1.5; }
+.install-option { display: grid; gap: 6px; width: 100%; margin-top: 4px; }.install-option .action { padding: 11px; font-size: .66rem; }.install-option small { color: #7d97a6; font-size: .62rem; line-height: 1.45; }.install-hint { padding: 9px 11px; border: 1px dashed #335a71; border-radius: 6px; }.install-dismiss { margin-top: 2px; padding: 6px 12px; border: 0; color: #86a0af; background: transparent; font-size: .68rem; text-decoration: underline; }

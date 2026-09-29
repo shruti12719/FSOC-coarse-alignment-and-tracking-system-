@@ -1,7 +1,7 @@
 # PyInstaller build for the standalone FSOC app.
-#   pip install pyinstaller
+#   pip install pyinstaller pywebview
 #   pyinstaller fsoc_app.spec
-# Output: dist/FSOC_Tracker/FSOC_Tracker(.exe)  - ship the whole folder.
+# Output: dist/FSOC_Tracker(.exe)  - a single self-contained file.
 from PyInstaller.utils.hooks import collect_submodules
 
 a = Analysis(
@@ -28,5 +28,5 @@ a = Analysis(
     excludes=["torch", "torchvision", "ultralytics", "matplotlib", "PyQt5", "tkinter"],
 )
 pyz = PYZ(a.pure)
-exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name="FSOC_Tracker", console=True)
-coll = COLLECT(exe, a.binaries, a.datas, name="FSOC_Tracker")
+# console=False: the app opens in its own window (pywebview); server output goes to FSOC_data/logs/app.log.
+exe = EXE(pyz, a.scripts, a.binaries, a.datas, [], name="FSOC_Tracker", console=False, icon="fsoc.ico")

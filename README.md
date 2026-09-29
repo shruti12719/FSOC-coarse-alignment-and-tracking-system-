@@ -23,17 +23,9 @@ using it for retained production data.
 
 ### Option 1: Run the Standalone Executable (`.exe`)
 
-1. Open PowerShell or Command Prompt.
-2. Go to the output folder:
-```powershell
-   cd dist\FSOC_Tracker
-```
-3. Launch the executable:
-```powershell
-   .\FSOC_Tracker.exe
-```
+Download `FSOC_Tracker.exe` from the [latest release](https://github.com/shruti12719/FSOC-coarse-alignment-and-tracking-system-/releases/latest) (the website's **Get the app** pop-up links to it) and double-click it. No Python, Node or internet connection is needed.
 
-The app opens in your browser. Closing the console window stops the app. Reports and uploaded videos are saved in the `FSOC_data` folder next to the executable.
+The app opens in its own window; closing the window stops it. Reports, logs and uploaded videos are saved in the `FSOC_data` folder next to the executable. If Windows shows "Windows protected your PC", choose **More info → Run anyway** (the executable is not code-signed).
 
 ### Option 2: Rebuild and Package the Executable
 
@@ -46,10 +38,11 @@ The app opens in your browser. Closing the console window stops the app. Reports
 ```
 2. Generate the standalone executable:
 ```powershell
+   pip install pyinstaller pywebview
    python -m PyInstaller fsoc_app.spec
 ```
 
-The new build is created in `dist\FSOC_Tracker\`. Share the whole folder, not only the `.exe`.
+The build is a single file, `dist\FSOC_Tracker.exe`. Set `FSOC_DEBUG=1` before launching it to log every request to `FSOC_data\logs\app.log`.
 
 ### Option 3: Run from Source (Development)
 

@@ -5,6 +5,7 @@ import { ScenarioPage } from './components/ScenarioPage'
 import { SettingsPage } from './components/SettingsPage'
 import { Simulation3D } from './components/Simulation3D'
 import { VideoBenchmark } from './components/VideoBenchmark'
+import { isInstalledApp, SHOW_INSTALL_EVENT } from './components/InstallPrompt'
 import { useTelemetry } from './hooks/useTelemetry'
 
 type Page = 'mission' | 'sim3d' | 'video' | 'scenario' | 'settings' | 'performance' | 'about'
@@ -28,7 +29,7 @@ export default function App() {
   if (!state) return <main className="loading"><div className="spinner" /><h1>FSOC Mission Control</h1><p>{connection === 'offline' ? 'Backend unavailable. Start it with: python -m server  (http://127.0.0.1:8011)' : 'Connecting to the Python simulation…'}</p></main>
   return <main className="app-shell">
     <header className="topbar"><div className="brand"><span aria-hidden="true">◈</span><div><h1>FSOC Coarse Alignment Mission Control</h1><p>AI virtual camera tracking for mobile free-space optical terminals</p></div></div>
-      <div className="header-states"><span><i className={`dot ${connection}`} />{connection === 'connected' ? 'Backend connected' : connection}</span><span><i className={`dot ${state.running ? 'connected' : 'offline'}`} />{state.running ? 'Simulation running' : 'Simulation paused'}</span>{state.video && state.video.status === 'PROCESSING' && <span><i className="dot connecting" />Video processing</span>}<span>{state.system.fps.toFixed(1)} Hz</span></div></header>
+      <div className="header-states"><span><i className={`dot ${connection}`} />{connection === 'connected' ? 'Backend connected' : connection}</span><span><i className={`dot ${state.running ? 'connected' : 'offline'}`} />{state.running ? 'Simulation running' : 'Simulation paused'}</span>{state.video && state.video.status === 'PROCESSING' && <span><i className="dot connecting" />Video processing</span>}<span>{state.system.fps.toFixed(1)} Hz</span>{!isInstalledApp() && <button className="get-app" onClick={() => window.dispatchEvent(new Event(SHOW_INSTALL_EVENT))}>Get the app</button>}</div></header>
     <nav className="nav-tabs" aria-label="Sections">{NAV.map(([id, label]) => <button className={page === id ? 'selected' : ''} aria-current={page === id ? 'page' : undefined} onClick={() => setPage(id)} key={id}>{label}</button>)}<button className={`about-link ${page === 'about' ? 'selected' : ''}`} onClick={() => setPage('about')}>About</button></nav>
     <StatusStrip state={state} />
     {error && <div className="error-banner" role="alert"><span>{error}</span><button onClick={clearError}>Dismiss</button></div>}

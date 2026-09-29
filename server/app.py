@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 import re
+import sys
 import time
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -25,7 +26,9 @@ from .video_benchmark import VideoBenchmark
 from .websocket import ConnectionManager
 
 ROOT = Path(__file__).resolve().parents[1]
-REPORTS, LOGS, SCENARIOS, WEB_DIST, UPLOADS = ROOT / "reports", ROOT / "logs", ROOT / "scenarios", ROOT / "web" / "dist", ROOT / "uploads"
+# A PyInstaller build unpacks into a temporary folder, so keep user data next to the .exe instead.
+DATA = Path(sys.executable).resolve().parent / "FSOC_data" if getattr(sys, "frozen", False) else ROOT
+REPORTS, LOGS, SCENARIOS, WEB_DIST, UPLOADS = DATA / "reports", DATA / "logs", DATA / "scenarios", ROOT / "web" / "dist", DATA / "uploads"
 MAX_UPLOAD_BYTES = 1024 * 1024 * 1024
 VIDEO_EXTENSIONS = {".mp4", ".avi", ".mov", ".mkv"}
 SESSION_ID = re.compile(r"^[A-Za-z0-9_-]+$")
