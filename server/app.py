@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 import re
 import sys
 import time
@@ -32,6 +33,11 @@ REPORTS, LOGS, SCENARIOS, WEB_DIST, UPLOADS = DATA / "reports", DATA / "logs", D
 MAX_UPLOAD_BYTES = 1024 * 1024 * 1024
 VIDEO_EXTENSIONS = {".mp4", ".avi", ".mov", ".mkv"}
 SESSION_ID = re.compile(r"^[A-Za-z0-9_-]+$")
+# Telemetry is the app's main bandwidth cost. FSOC_STREAM_HZ caps how often it is
+# sent (0 = every simulation tick); the simulation itself always runs at full rate.
+STREAM_HZ = float(os.getenv("FSOC_STREAM_HZ", "0"))
+# Large, slow-changing fields are sent at most this often (seconds); clients keep their last copy.
+SLOW_FIELDS = {"history": 1.0, "trajectories": 0.5, "camera_trajectory": 0.5}
 
 
 class Hub:
@@ -44,6 +50,8 @@ class Hub:
         self.video = VideoBenchmark(UPLOADS, REPORTS)
         self.task: asyncio.Task[None] | None = None
         self.last_tick = time.perf_counter()
+        self.next_send = 0.0
+        self.slow_sent = dict.fromkeys(SLOW_FIELDS, 0.0)
 
     async def start(self) -> None:
         self.task = asyncio.create_task(self._run(), name="fsoc-supplied-core-simulation")
@@ -67,9 +75,23 @@ class Hub:
             self.last_tick = now
             if self.video.active:
                 state["video"] = self.video.snapshot()
-            await self.connections.broadcast(state)
+            if self.connections.clients and now >= self.next_send:
+                if STREAM_HZ > 0:
+                    gap = 1.0 / STREAM_HZ
+                    # Keep an even cadence; after a stall, restart from now instead of bursting to catch up.
+                    self.next_send = self.next_send + gap if now - self.next_send < gap else now + gap
+                await self.connections.broadcast(self._without_stale_slow_fields(state, now), state)
             period = 1.0 / float(self.simulation.config["camera"]["update_rate_hz"])
             await asyncio.sleep(max(0.001, period - (time.perf_counter() - now)))
+
+    def _without_stale_slow_fields(self, state: dict[str, Any], now: float) -> dict[str, Any]:
+        light = dict(state)
+        for key, interval in SLOW_FIELDS.items():
+            if now - self.slow_sent[key] >= interval:
+                self.slow_sent[key] = now
+            else:
+                light.pop(key, None)
+        return light
 
     def export_current(self) -> dict[str, Any]:
         if not self.analytics.rows:

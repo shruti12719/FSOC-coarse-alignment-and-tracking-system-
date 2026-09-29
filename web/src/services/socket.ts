@@ -1,6 +1,6 @@
 import type { Command, Telemetry } from '../types/simulation'
 
-export type Connection = 'connecting' | 'connected' | 'offline'
+export type Connection = 'connecting' | 'connected' | 'offline' | 'paused'
 
 export class TelemetrySocket {
   private socket: WebSocket | null = null
@@ -34,9 +34,22 @@ export class TelemetrySocket {
     else this.onError('Backend is disconnected. The requested command was not sent.')
   }
 
+  /** Stop streaming (to save bandwidth) until connect() is called again. */
+  pause() {
+    this.destroy()
+    this.onConnection('paused')
+  }
+
   destroy() {
     this.closed = true
     if (this.retry !== null) window.clearTimeout(this.retry)
-    this.socket?.close()
+    this.retry = null
+    if (this.socket) {
+      // Detach first so an intentional close is not reported as 'offline' or retried.
+      this.socket.onclose = null
+      this.socket.onerror = null
+      this.socket.close()
+      this.socket = null
+    }
   }
 }

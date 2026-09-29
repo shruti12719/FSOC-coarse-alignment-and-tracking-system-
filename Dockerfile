@@ -10,9 +10,11 @@ RUN npm run build
 
 FROM python:3.12-slim
 
+# FSOC_STREAM_HZ caps telemetry at 10 updates/s to limit hosting bandwidth (the desktop app is uncapped).
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1
+    PIP_NO_CACHE_DIR=1 \
+    FSOC_STREAM_HZ=10
 
 WORKDIR /app
 
