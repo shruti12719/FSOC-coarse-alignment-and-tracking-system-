@@ -4,6 +4,20 @@ This web application wraps the supplied `2d final` simulator modules (`sim`, `vi
 
 ## How to Run the Application
 
+## Deploy to Render
+
+This repository includes `Dockerfile` and `render.yaml`, so Render builds the
+React client and runs the FastAPI/WebSocket service together. From your Render
+dashboard, select **New > Blueprint**, connect this GitHub repository, review
+the `fsoc-coarse-alignment-tracker` service, then select **Deploy Blueprint**.
+After the health check at `/api/health` passes, open the generated
+`https://<service-name>.onrender.com` URL.
+
+The free plan is suitable for demonstration use. Its local filesystem is
+ephemeral: reports, saved scenarios and uploaded benchmark videos are reset
+when the service restarts. Add a persistent disk or external storage before
+using it for retained production data.
+
 
 ## Running the Application
 
